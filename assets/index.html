@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>golang websocket with redis sample</title>
+</head>
+<body>
+<script>
+    let socket = new WebSocket("ws://127.0.0.1:8000/ws");
+    console.log("attempting connection...");
+
+    socket.onopen = () => {
+        setInterval(
+            function(){ socket.send("ping") }
+            , 1000 )
+    };
+
+    socket.onmessage = (msg) => {
+        console.log((new Date())+ " <== " + msg.data + "\n");
+    }
+
+    socket.onclose = event => {
+        console.log("socket closed connection: ", event);
+    };
+
+    socket.onerror = error => {
+        console.log("socket error: ", error);
+    };
+</script>
+</body>
+</html>

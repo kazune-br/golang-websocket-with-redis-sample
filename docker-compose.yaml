@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  app:
+    image: "websocket-api:latest"
+    build:
+      context: .
+      dockerfile: ./build/app/Dockerfile
+    command: ./app-linux-amd64
+    container_name: app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    restart: always
+
+  redis:
+    image: "websocket-redis:latest"
+    build:
+      context: .
+      dockerfile: ./build/redis/Dockerfile
+    volumes:
+      - ./data/metrics_data_redis:/data
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
