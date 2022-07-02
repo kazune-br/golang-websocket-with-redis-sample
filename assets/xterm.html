@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="stylesheet" href="node_modules/xterm/css/xterm.css"/>
+    <script src="node_modules/xterm/lib/xterm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/3.14.5/xterm.min.js"></script>
+    <title>xterm sample</title>
+</head>
+<body>
+<script>
+    const term = new Terminal({
+        cursorBlink: "block"
+    });
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws");
+    let line = "";
+    let entries = [];
+    term.open(document.getElementById("terminal"));
+    term.write("$ ");
+
+    term.prompt = () => {
+        if (line) {
+            let data = {command: line};
+            ws.send(JSON.stringify(data));
+        }
+    };
+    term.prompt();
+
+    // Receive data from socket
+    ws.onmessage = msg => {
+        term.write(msg.data + "\n\r");
+        term.write("$ ");
+        // term.write("\r\n" + JSON.parse(msg.data).data);
+        line = "";
+    };
+
+    term.on("key", function (key, ev) {
+        if (ev.keyCode === 13) {
+            // Enter
+            if (line) {
+                entries.push(line);
+                term.write("\r\n");
+                term.prompt();
+            }
+        } else if (ev.keyCode === 8) {
+            // Backspace
+            if (line) {
+                line = line.slice(0, line.length - 1);
+                term.write("\b \b");
+            }
+        } else {
+            line += key;
+            term.write(key);
+        }
+    });
+
+    // paste value
+    term.on("paste", function (data) {
+        line += data;
+        term.write(data);
+    });
+</script>
+</body>
+</html>
