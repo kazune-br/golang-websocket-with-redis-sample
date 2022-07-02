@@ -22,3 +22,6 @@ go-build: lint
 
 open:
 	open assets/index.html
+
+publish:
+	redis-cli --pass password -p 6380 publish sample "hello"
