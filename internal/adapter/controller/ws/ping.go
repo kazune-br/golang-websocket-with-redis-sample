@@ -1,4 +1,4 @@
-package controller
+package ws
 
 import (
 	"context"
@@ -9,19 +9,18 @@ import (
 	"net/http"
 )
 
-var upgrader websocket.Upgrader
-
-type WSController struct {
+type PingController struct {
 	rdb *redis.Client
 }
 
-func NewWSController(rdb *redis.Client) *WSController {
-	return &WSController{
+func NewPingController(rdb *redis.Client) *PingController {
+	return &PingController{
 		rdb,
 	}
 }
 
-func (w *WSController) WS(c *gin.Context) {
+func (w *PingController) WS(c *gin.Context) {
+	var upgrader websocket.Upgrader
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
@@ -44,7 +43,7 @@ func (w *WSController) WS(c *gin.Context) {
 	}
 }
 
-func (w *WSController) subscribe(conn *websocket.Conn) {
+func (w *PingController) subscribe(conn *websocket.Conn) {
 	ctx := context.Background()
 	subscriber := w.rdb.Subscribe(ctx, "sample")
 	for {
