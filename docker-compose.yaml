@@ -23,5 +23,5 @@ services:
       - ./data/metrics_data_redis:/data
     container_name: redis
     ports:
-      - "6379:6379"
+      - "6380:6379"
     restart: always
