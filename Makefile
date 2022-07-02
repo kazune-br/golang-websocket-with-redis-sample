@@ -19,3 +19,6 @@ lint:
 
 go-build: lint
 	GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./.artifacts/app-linux-amd64 ./cmd/app.go
+
+open:
+	open assets/index.html
