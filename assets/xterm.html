@@ -14,7 +14,7 @@
     const term = new Terminal({
         cursorBlink: "block"
     });
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws");
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws/shell");
     let line = "";
     let entries = [];
     term.open(document.getElementById("terminal"));
@@ -30,7 +30,14 @@
 
     // Receive data from socket
     ws.onmessage = msg => {
-        term.write(msg.data + "\n\r");
+        let outputs = msg.data.split('\n');
+        console.log(outputs)
+        outputs.forEach((output, index) => {
+            term.write(output);
+            if (outputs.length !== index + 1) {
+                term.write("\n\r");
+            }
+        })
         term.write("$ ");
         // term.write("\r\n" + JSON.parse(msg.data).data);
         line = "";
@@ -42,6 +49,9 @@
             if (line) {
                 entries.push(line);
                 term.write("\r\n");
+                term.prompt();
+            } else {
+                term.write("\r\n$ ");
                 term.prompt();
             }
         } else if (ev.keyCode === 8) {
