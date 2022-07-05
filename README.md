@@ -11,7 +11,9 @@ redis-cli --pass password publish sample "hello"
 ### using websocat
 ```bash
 make up
-websocat ws://127.0.0.1:8000/ws
+websocat ws://127.0.0.1:8000/ws/subscribe
 >>> hello
 <<< pong
+
+make publish
 ```

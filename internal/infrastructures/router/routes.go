@@ -21,6 +21,7 @@ func Run() {
 	r.GET("/healthcheck", controller.HealthCheck)
 	r.GET("/ws/ping", ws.NewPingController().WS)
 	r.GET("/ws/subscribe", ws.NewSubscribeController(redis.NewRedisConnector().Client).WS)
+	r.GET("/ws/shell", ws.NewShellController().WS)
 
 	logging.Info("starting server")
 	if err := r.Run(fmt.Sprintf(":%d", 8000)); err != nil {

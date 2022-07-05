@@ -20,8 +20,11 @@ lint:
 go-build: lint
 	GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./.artifacts/app-linux-amd64 ./cmd/app.go
 
-open:
+open-index:
 	open assets/index.html
+
+open-xterm:
+	open assets/xterm.html
 
 publish:
 	redis-cli --pass password -p 6380 publish sample "hello"
